@@ -1,0 +1,98 @@
+### Variables
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+### The basic request
+GET {{baseUrl}}
+
+### Get all tasks
+# @name getAllTasks
+GET {{baseUrl}}/tasks?limit=4&offset=3
+
+### Get all in progress tasks
+# @name getAllInprogress
+GET {{baseUrl}}/tasks?status=IN_PROGRESS
+
+### Get all with search query
+# @name getAllWithSearchQuery
+GET {{baseUrl}}/tasks?search=tho
+
+### Get all filtered by labels
+# @name getAllFilteredByLabels
+GET {{baseUrl}}/tasks?labels=urgent
+
+### Get all sorted
+# @name getAllSorted
+GET {{baseUrl}}/tasks?sortBy=title&sortOrder=DESC
+
+### Get one task
+GET {{baseUrl}}/tasks/{{taskId}}
+
+### Create newtask
+# @name createTask
+POST {{baseUrl}}/tasks
+Content-Type: {{contentType}}
+
+{
+    "title": "Learn jenkin",
+    "description": "Complete the course jenkin",
+    "status": "IN_PROGRESS",
+    "userId": "63824349-4199-4325-b729-f2f3ac1770a0",
+    "labels": [
+        {
+            "name": "urgent"
+        },
+        {
+            "name": "done"
+        }
+    ]
+}
+
+### Set the task id
+@taskId = {{ createTask.response.body.id }}
+
+### Validation error - status is incorrect
+POST {{baseUrl}}/tasks
+Content-Type: {{contentType}}
+
+{
+    "title": null,
+    "description": "Complete the NestJS course",
+    "status": "XXX"
+}
+
+#b100e231-6d58-467b-816b-4df634ed6f37
+### Update the task status
+PATCH {{baseUrl}}/tasks/{{taskId}}
+Content-Type: {{contentType}}
+
+{
+    "status": "IN_PROGRESS",
+    "labels": [{
+        "name": "done"
+    }]
+}
+
+### Deleting a task
+DELETE {{baseUrl}}/tasks/{{taskId}}
+
+### Add specific labels to task
+# @name addLabels
+POST {{baseUrl}}/tasks/{{taskId}}/labels
+Content-Type: {{contentType}}
+
+[
+    {"name": "prioritized"},
+    {"name": "bug"}
+]
+
+### Remove specific labels from task
+# @name removeLabels
+DELETE {{baseUrl}}/tasks/2fa4427a-54af-45e5-83f7-92547457efb7/labels 
+Content-Type: {{contentType}}
+
+[
+    "prioritized", "bug"
+]
+
+
